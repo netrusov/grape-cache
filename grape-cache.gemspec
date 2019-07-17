@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.summary = 'Yet another caching solution for Grape framework'
   spec.homepage = 'https://github.com/netrusov/grape-cache'
 
-  spec.files = `git ls-files -z`.split("\x0")
+  spec.files = Dir['**/*'].keep_if { |file| File.file?(file) }
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'activesupport'
