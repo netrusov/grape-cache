@@ -9,8 +9,10 @@ Gem::Specification.new do |spec|
   spec.name = 'grape-cache'
   spec.version = Grape::Cache::VERSION
   spec.authors = ['Alexander Netrusov']
+  spec.license = 'MIT'
 
   spec.summary = 'Yet another caching solution for Grape framework'
+  spec.homepage = 'https://github.com/netrusov/grape-cache'
 
   spec.files = `git ls-files -z`.split("\x0")
   spec.require_paths = ['lib']
