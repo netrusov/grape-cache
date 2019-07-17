@@ -21,12 +21,8 @@ module Grape
           .then { |key| key.is_a?(Proc) ? instance_eval(&key) : key }
           .then { |key| expand_cache_key(*key) }
 
-        if Rails.cache.exist?(cache_key)
-          Grape::Cache.read cache_key
-        else
-          instance_eval(&block).tap do |response|
-            Grape::Cache.store cache_key, (body || response), config[:expires_in]
-          end
+        Grape::Cache.read(cache_key) || instance_eval(&block).tap do |response|
+          Grape::Cache.store cache_key, (body || response), config[:expires_in]
         end
       end
     end
@@ -36,7 +32,7 @@ module Grape
     def self.read(key)
       key
         .then(&Rails.cache.method(:read))
-        .then(&Grape::Json.method(:load))
+        .then { |result| Grape::Json.load(result) if result }
     end
 
     # @param key [String]
