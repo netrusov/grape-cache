@@ -8,7 +8,7 @@ module Grape
       extend ActiveSupport::Concern
 
       class_methods do
-        # Evaluates DSL and assigns [Grape::Cache::Config] instance to `:cache` route setting
+        # Evaluates DSL and assigns [Grape::Cache::Config] instance to ":cache" route setting
         #
         # @return [void]
         def cache(&block)

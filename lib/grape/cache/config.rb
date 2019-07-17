@@ -5,11 +5,12 @@ module Grape
     class Config
       # @private
       class CacheControl
-        attr_reader :max_age
-
-        def initialize(max_age, options = {})
-          @max_age = max_age
+        def initialize(options = {})
           @options = options
+        end
+
+        def max_age
+          @options[:max_age]
         end
 
         def public?
@@ -35,28 +36,34 @@ module Grape
         end
       end
 
-      attr_reader :cache_control, :ttl
+      delegate :[], :[]=, :fetch, to: :@storage
 
-      @ttl = 0
-      @cache_control = 'private, max-age=0, must-revalidate'
+      def initialize
+        @storage = {
+          expires_in: 0,
+          cache_control: 'private, max-age=0, must-revalidate'
+        }
+      end
 
-      def key(*args, &block)
-        if block_given?
-          @key = block
-        elsif args.present?
-          @key = args
-        else
-          @key
-        end
+      # @return [void]
+      def key(&block)
+        self[:key] = block
       end
 
       # @param seconds [Integer] cache TTL
-      # @param options [Hash] parameters for `Cache-Control` header
-      # @option options [Boolean] :public
+      # @return [void]
+      def expires_in(seconds)
+        self[:expires_in] = seconds.to_i
+      end
+
+      # @param options [Hash] parameters for "Cache-Control" header
+      # @option options [Boolean] :public defaults to "false"
       # @option options [Boolean] :must_revalidate
-      def expires_in(seconds, options = {})
-        @ttl = seconds.to_i
-        @cache_control = CacheControl.new(@ttl, options).to_s
+      # @option options [Integer] :max_age defaults to "expires_in"
+      # @return [void]
+      def cache_control(options = {})
+        self[:cache_control] =
+          CacheControl.new(options.reverse_merge(max_age: self[:expires_in])).to_s
       end
     end
   end
