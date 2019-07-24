@@ -41,7 +41,7 @@ module Grape
     # @return [void]
     def self.store(key, response, expires_in)
       options = {}
-      options[:expires_in] = expires_in if expires_in > 0
+      options[:expires_in] = expires_in if expires_in.positive?
 
       Rails.cache.write(key, Grape::Json.dump(response), options) if response
     end
