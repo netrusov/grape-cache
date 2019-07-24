@@ -9,7 +9,7 @@ This gem is still heavily tied with Rails and not production ready
 Add gem to your Gemfile
 
 ```ruby
-gem 'grape-cache', github: 'netrusov/grape-cache', require: 'grape/cache'
+gem 'grape-cache', github: 'netrusov/grape-cache'
 ```
 
 Then install
