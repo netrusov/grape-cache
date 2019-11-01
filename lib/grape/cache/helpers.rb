@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'active_support/cache'
+
 module Grape
   module Cache
     module Helpers

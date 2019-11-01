@@ -1,9 +1,5 @@
 ## Grape::Cache - Yet another caching solution for Grape framework
 
-### Note
-
-This gem is still heavily tied with Rails and not production ready
-
 ### Installation
 
 Add gem to your Gemfile
@@ -16,6 +12,16 @@ Then install
 
 ```
 bundle install
+```
+
+### Configuration
+
+By default `Grape::Cache` uses `ActiveSupport::Cache::MemoryStore` as backend. You use any compatible store though.
+
+```ruby
+Grape::Cache.configure do |config|
+  config.backend = Rails.cache
+end
 ```
 
 ### Usage
