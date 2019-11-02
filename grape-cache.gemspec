@@ -14,8 +14,15 @@ Gem::Specification.new do |spec|
   spec.summary = 'Yet another caching solution for Grape framework'
   spec.homepage = 'https://github.com/netrusov/grape-cache'
 
-  spec.files = Dir['**/*'].keep_if { |file| File.file?(file) }
-  spec.require_paths = ['lib']
+  spec.files = Dir['LICENSE', 'lib/**/*']
+  spec.extra_rdoc_files = ['README.md']
+
+  spec.require_path = 'lib'
+
+  spec.metadata = {
+    'bug_tracker_uri'   => 'https://github.com/netrusov/grape-cache/issues',
+    'source_code_uri'   => 'https://github.com/netrusov/grape-cache'
+  }
 
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'grape', '~> 1.2.3'
