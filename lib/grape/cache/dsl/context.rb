@@ -47,8 +47,8 @@ module Grape
         end
 
         # @return [void]
-        def key(&block)
-          self[:key] = block
+        def key(value = nil, &block)
+          self[:key] = value || block
         end
 
         # @param seconds [Integer] cache TTL
