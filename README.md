@@ -16,7 +16,7 @@ bundle install
 
 ### Configuration
 
-By default `Grape::Cache` uses `ActiveSupport::Cache::MemoryStore` as backend. You use any compatible store though.
+By default `Grape::Cache` uses `ActiveSupport::Cache::MemoryStore` as backend. You can use any compatible store though.
 
 ```ruby
 Grape::Cache.configure do |config|
