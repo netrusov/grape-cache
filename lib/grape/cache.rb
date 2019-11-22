@@ -4,7 +4,7 @@ require 'rack'
 require 'grape'
 
 require 'grape/cache/configurable'
-require 'grape/cache/dsl'
+require 'grape/cache/extensions/dsl'
 require 'grape/cache/extensions/endpoint'
 require 'grape/cache/helpers'
 require 'grape/cache/version'
@@ -36,8 +36,8 @@ module Grape
   end
 end
 
-Grape::API::Instance.class_eval do
-  include Grape::Cache::DSL
+Grape::API::Instance.class_exec do
+  include Grape::Cache::Extensions::DSL
   include Grape::Cache::Extensions::Endpoint
 
   helpers Grape::Cache::Helpers

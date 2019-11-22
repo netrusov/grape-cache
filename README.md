@@ -1,20 +1,19 @@
 ## Grape::Cache - Yet another caching solution for Grape framework
 
-### Installation
+## Installation
 
-Add gem to your Gemfile
+Add this line to your application's Gemfile:
 
 ```ruby
 gem 'grape-cache', github: 'netrusov/grape-cache'
 ```
 
-Then install
-
+And then execute:
 ```
 bundle install
 ```
 
-### Configuration
+## Configuration
 
 By default `Grape::Cache` uses `ActiveSupport::Cache::MemoryStore` as backend. You can use any compatible store though.
 
@@ -24,10 +23,10 @@ Grape::Cache.configure do |config|
 end
 ```
 
-### Usage
+## Usage
 
 ```ruby
-class API::Routes < Grape::API
+class API < Grape::API
   namespace :users do
     cache do
       key { params.sort }
@@ -40,7 +39,7 @@ class API::Routes < Grape::API
     end
 
     get do
-      present :users, UserSearch.new(permitted_params[:filters]).result, with: API::Entities::User
+      present :users, Searches::Users.new(permitted_params[:filters]).result, with: Grape::Presenters::Presenter
     end
 
     route_param :id do
@@ -61,10 +60,24 @@ class API::Routes < Grape::API
         end
 
         get do
-          present :posts, User.find(params[:id]).posts, with: API::Entities::Post
+          present :posts, User.find(params[:id]).posts, with: Grape::Presenters::Presenter
         end
       end
     end
   end
+
+  helpers do
+    def permitted_params
+      @permitted_params ||= declared(params, include_missing: false)
+    end
+  end
 end
 ```
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/netrusov/grape-cache.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

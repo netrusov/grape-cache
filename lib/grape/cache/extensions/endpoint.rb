@@ -7,7 +7,7 @@ module Grape
         extend ActiveSupport::Concern
 
         class_methods do
-          # @param context [Grape::Cache::DSL::Context] cache instance created in `cache` block
+          # @param context [Grape::Cache::DSL] cache instance created in `cache` block
           # @return [Proc] route proc with caching logic
           def generate_cached_api_method(context, &block)
             return block unless context
@@ -17,10 +17,10 @@ module Grape
 
               cache_key =
                 context[:key]
-                  .then { |key| key.is_a?(Proc) ? instance_eval(&key) : key }
+                  .then { |key| key.is_a?(Proc) ? instance_exec(&key) : key }
                   .then { |key| expand_cache_key(*key) }
 
-              Grape::Cache.read(cache_key) || instance_eval(&block).tap do |response|
+              Grape::Cache.read(cache_key) || instance_exec(&block).tap do |response|
                 Grape::Cache.store cache_key, (body || response), expires_in: context[:expires_in]
               end
             end

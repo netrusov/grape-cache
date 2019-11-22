@@ -5,7 +5,7 @@ require 'active_support/cache'
 module Grape
   module Cache
     module Helpers
-      # @param *args [Array<String, Integer>] parameters which will be concatenated into cache key
+      # @param *args [String, Integer] parameters which will be concatenated into cache key
       # @return [String] cache key
       def expand_cache_key(*args)
         [
