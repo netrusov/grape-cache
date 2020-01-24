@@ -2,7 +2,7 @@
 
 module Grape
   module Cache
-    module DSL
+    class DSL
       # @private
       class CacheControl
         def initialize(options = {})
