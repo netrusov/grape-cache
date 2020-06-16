@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   }
 
   spec.add_runtime_dependency 'activesupport'
-  spec.add_runtime_dependency 'grape', '~> 1.2.3'
+  spec.add_runtime_dependency 'grape', '>= 1.2', '< 2'
   spec.add_runtime_dependency 'rack'
 
   spec.add_development_dependency 'bundler'
