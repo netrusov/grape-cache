@@ -2,6 +2,7 @@
 
 module Grape
   module Cache
+    # @nodoc
     class DSL
       # @private
       class CacheControl
@@ -36,11 +37,12 @@ module Grape
         end
       end
 
-      delegate :[], :[]=, :fetch, to: :@storage
+      delegate :[], :[]=, :fetch, :slice, to: :@storage
 
       def initialize
         @storage = {
           expires_in: 0,
+          race_condition_ttl: 5.seconds.to_i,
           cache_control: 'private, max-age=0, must-revalidate'
         }
       end
@@ -54,6 +56,12 @@ module Grape
       # @return [void]
       def expires_in(seconds)
         self[:expires_in] = seconds.to_i
+      end
+
+      # @param seconds [Integer] cache race condition TTL
+      # @return [void]
+      def race_condition_ttl(seconds)
+        self[:race_condition_ttl] = seconds.to_i
       end
 
       # @param options [Hash] parameters for "Cache-Control" header

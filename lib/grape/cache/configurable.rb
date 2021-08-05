@@ -5,9 +5,11 @@ require 'active_support/concern'
 
 module Grape
   module Cache
+    # @nodoc
     module Configurable
       extend ActiveSupport::Concern
 
+      # @nodoc
       class Configuration
         attr_accessor :backend
 

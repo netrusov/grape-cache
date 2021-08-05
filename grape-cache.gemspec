@@ -20,9 +20,11 @@ Gem::Specification.new do |spec|
   spec.require_path = 'lib'
 
   spec.metadata = {
-    'bug_tracker_uri'   => 'https://github.com/netrusov/grape-cache/issues',
-    'source_code_uri'   => 'https://github.com/netrusov/grape-cache'
+    'bug_tracker_uri' => 'https://github.com/netrusov/grape-cache/issues',
+    'source_code_uri' => 'https://github.com/netrusov/grape-cache'
   }
+
+  spec.required_ruby_version = '>= 2.6.0'
 
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'grape', '>= 1.2', '< 2'
@@ -30,5 +32,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop', '>= 1.18.0'
 end

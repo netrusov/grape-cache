@@ -7,6 +7,7 @@ require 'grape/cache/dsl'
 module Grape
   module Cache
     module Extensions
+      # @nodoc
       module DSL
         extend ActiveSupport::Concern
 
@@ -15,10 +16,9 @@ module Grape
           #
           # @return [void]
           def cache(&block)
-            Grape::Cache::DSL.new.then do |context|
-              context.instance_exec(&block)
-              route_setting :cache, context
-            end
+            context = Grape::Cache::DSL.new
+            context.instance_exec(&block)
+            route_setting(:cache, context)
           end
         end
       end
