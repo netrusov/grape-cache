@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
-
-require 'grape/cache/dsl'
-
 module Grape
   module Cache
     module Extensions

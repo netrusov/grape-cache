@@ -27,20 +27,18 @@ module Grape
         end
 
         def to_s
-          options = []
-
-          options << (public? ? 'public' : 'private')
-          options << (no_cache? ? 'no-cache' : ['max-age', max_age].join('='))
-          options << 'must-revalidate' if must_revalidate?
-
-          options.join(', ')
+          [
+            (public? ? 'public' : 'private'),
+            (no_cache? ? 'no-cache' : "max-age=#{max_age}"),
+            ('must-revalidate' if must_revalidate?)
+          ].compact.join(', ')
         end
       end
 
-      delegate :[], :[]=, :fetch, :slice, to: :@storage
+      delegate :[], :[]=, :fetch, :slice, to: :@store
 
       def initialize
-        @storage = {
+        @store = {
           expires_in: 0,
           race_condition_ttl: 5.seconds.to_i,
           cache_control: 'private, max-age=0, must-revalidate'
@@ -49,19 +47,19 @@ module Grape
 
       # @return [void]
       def key(value = nil, &block)
-        self[:key] = value || block
+        @store[:key] = value || block
       end
 
       # @param seconds [Integer] cache TTL
       # @return [void]
       def expires_in(seconds)
-        self[:expires_in] = seconds.to_i
+        @store[:expires_in] = seconds.to_i
       end
 
       # @param seconds [Integer] cache race condition TTL
       # @return [void]
       def race_condition_ttl(seconds)
-        self[:race_condition_ttl] = seconds.to_i
+        @store[:race_condition_ttl] = seconds.to_i
       end
 
       # @param options [Hash] parameters for "Cache-Control" header
@@ -70,8 +68,9 @@ module Grape
       # @option options :max_age [Integer] defaults to "expires_in"
       # @return [void]
       def cache_control(options = {})
-        self[:cache_control] =
-          CacheControl.new(options.reverse_merge(max_age: self[:expires_in])).to_s
+        @store[:cache_control] = CacheControl.new(
+          options.reverse_merge(max_age: @store[:expires_in])
+        ).to_s
       end
     end
   end

@@ -10,13 +10,13 @@ module Grape
             formatter = super
 
             lambda do |body, env|
-              context = env['grape-cache']
+              cache = env['grape-cache']
 
-              return formatter.call(body, env) unless context
-              return context[:value] if context[:exists]
+              return formatter.call(body, env) unless cache
+              return cache[:value] if cache[:hit]
 
               formatter.call(body, env).tap do |response|
-                Grape::Cache.store(context[:key], response, **context[:options])
+                Grape::Cache.write(cache[:key], response, **cache[:options])
               end
             end
           end

@@ -18,16 +18,17 @@ module Grape
 
               key = context[:key]
               key = key.is_a?(Proc) ? instance_exec(&key) : key
-              key = Grape::Cache::Helpers.expand_cache_key(env, *key)
+              key = Grape::Cache::Helpers.expand_cache_key(env, key)
 
-              cached_response = Grape::Cache.read(key)
-              (cached_response || instance_exec(&block)).tap do |response|
-                env['grape-cache'] = {
-                  key: key,
-                  value: response,
-                  exists: !cached_response.nil?,
-                  options: context.slice(:expires_in, :race_condition_ttl).compact
-                }
+              env['grape-cache'] = { key: key }
+
+              if (value = Grape::Cache.read(key))
+                env['grape-cache'][:hit] = true
+                env['grape-cache'][:value] = value
+              else
+                env['grape-cache'][:hit] = false
+                env['grape-cache'][:options] = context.slice(:expires_in, :race_condition_ttl).compact
+                instance_exec(&block)
               end
             end
           end
