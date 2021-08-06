@@ -35,12 +35,12 @@ module Grape
         end
       end
 
-      delegate :[], :[]=, :fetch, :slice, to: :@store
+      delegate :[], :slice, to: :@store
 
       def initialize
         @store = {
           expires_in: 0,
-          race_condition_ttl: 5.seconds.to_i,
+          race_condition_ttl: 5,
           cache_control: 'private, max-age=0, must-revalidate'
         }
       end
