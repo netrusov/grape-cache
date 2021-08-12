@@ -11,7 +11,7 @@ module Grape
         end
 
         def max_age
-          @options[:max_age]
+          @options[:max_age].to_i
         end
 
         def public?
@@ -41,7 +41,7 @@ module Grape
         @store = {
           expires_in: 0,
           race_condition_ttl: 5,
-          cache_control: 'private, max-age=0, must-revalidate'
+          cache_control: 'private, no-cache, must-revalidate'
         }
       end
 
@@ -63,14 +63,12 @@ module Grape
       end
 
       # @param options [Hash] parameters for "Cache-Control" header
-      # @option options :public [Boolean] defaults to "false"
+      # @option options :public [Boolean]
       # @option options :must_revalidate [Boolean]
-      # @option options :max_age [Integer] defaults to "expires_in"
+      # @option options :max_age [Integer]
       # @return [void]
       def cache_control(options = {})
-        @store[:cache_control] = CacheControl.new(
-          options.reverse_merge(max_age: @store[:expires_in])
-        ).to_s
+        @store[:cache_control] = CacheControl.new(options).to_s
       end
     end
   end

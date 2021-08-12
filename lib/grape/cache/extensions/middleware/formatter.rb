@@ -16,7 +16,7 @@ module Grape
               return cache[:value] if cache[:hit]
 
               formatter.call(body, env).tap do |response|
-                Grape::Cache.write(cache[:key], response, **cache[:options])
+                Grape::Cache.write(cache[:key], response, cache[:options])
               end
             end
           end
