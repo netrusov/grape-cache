@@ -8,6 +8,14 @@ Layout/BlockAlignment:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
+Metrics/BlockLength:
+  ExcludedMethods:
+    - context
+    - describe
+
 Naming/FileName:
   Exclude:
     - 'lib/grape-cache.rb'
+
+Style/FrozenStringLiteralComment:
+  SafeAutoCorrect: true
