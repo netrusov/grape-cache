@@ -3,7 +3,8 @@
 module Grape
   module Cache
     module Extensions
-      module Endpoint
+      # @nodoc
+      module Instance
         extend ActiveSupport::Concern
 
         class_methods do
@@ -15,14 +16,11 @@ module Grape
             proc do
               header 'Cache-Control', context[:cache_control]
 
-              cache_key =
-                context[:key]
-                  .then { |key| key.is_a?(Proc) ? instance_exec(&key) : key }
-                  .then { |key| expand_cache_key(*key) }
+              key = context[:key]
+              key = key.is_a?(Proc) ? instance_exec(&key) : key
+              key = Grape::Cache.expand_cache_key(env, key)
 
-              Grape::Cache.read(cache_key) || instance_exec(&block).tap do |response|
-                Grape::Cache.store cache_key, (body || response), expires_in: context[:expires_in]
-              end
+              Grape::Cache.with_cached_response(env, key, context) { instance_exec(&block) }
             end
           end
 

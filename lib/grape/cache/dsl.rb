@@ -2,6 +2,7 @@
 
 module Grape
   module Cache
+    # @nodoc
     class DSL
       # @private
       class CacheControl
@@ -10,7 +11,7 @@ module Grape
         end
 
         def max_age
-          @options[:max_age]
+          @options[:max_age].to_i
         end
 
         def public?
@@ -26,44 +27,48 @@ module Grape
         end
 
         def to_s
-          options = []
-
-          options << (public? ? 'public' : 'private')
-          options << (no_cache? ? 'no-cache' : ['max-age', max_age].join('='))
-          options << 'must-revalidate' if must_revalidate?
-
-          options.join(', ')
+          [
+            (public? ? 'public' : 'private'),
+            (no_cache? ? 'no-cache' : "max-age=#{max_age}"),
+            ('must-revalidate' if must_revalidate?)
+          ].compact.join(', ')
         end
       end
 
-      delegate :[], :[]=, :fetch, to: :@storage
+      delegate :[], :slice, to: :@store
 
       def initialize
-        @storage = {
+        @store = {
           expires_in: 0,
-          cache_control: 'private, max-age=0, must-revalidate'
+          race_condition_ttl: 5,
+          cache_control: 'private, no-cache, must-revalidate'
         }
       end
 
       # @return [void]
       def key(value = nil, &block)
-        self[:key] = value || block
+        @store[:key] = value || block
       end
 
       # @param seconds [Integer] cache TTL
       # @return [void]
       def expires_in(seconds)
-        self[:expires_in] = seconds.to_i
+        @store[:expires_in] = seconds.to_i
+      end
+
+      # @param seconds [Integer] cache race condition TTL
+      # @return [void]
+      def race_condition_ttl(seconds)
+        @store[:race_condition_ttl] = seconds.to_i
       end
 
       # @param options [Hash] parameters for "Cache-Control" header
-      # @option options :public [Boolean] defaults to "false"
+      # @option options :public [Boolean]
       # @option options :must_revalidate [Boolean]
-      # @option options :max_age [Integer] defaults to "expires_in"
+      # @option options :max_age [Integer]
       # @return [void]
       def cache_control(options = {})
-        self[:cache_control] =
-          CacheControl.new(options.reverse_merge(max_age: self[:expires_in])).to_s
+        @store[:cache_control] = CacheControl.new(options).to_s
       end
     end
   end
